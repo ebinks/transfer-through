@@ -1,3 +1,4 @@
+var bigNumber = require('bignumber');
 var Transfers = artifacts.require("Transfers");
 var Transfers2 = artifacts.require("Transfers2");
 
@@ -22,6 +23,7 @@ contract('Transfers', function(accounts) {
     	console.log(hash.tx);
     	let bal = await transfers.balances.call(addressA, {from: addressA});
     	console.log(bal);
+    	//assert(bal.isEqualTo(100), "")
     })
 
     it("should withdraw", async() => {
@@ -31,7 +33,7 @@ contract('Transfers', function(accounts) {
     	let hash = await transfers.withdraw(addressB, val, {from: addressA});
     	let postB = web3.eth.getBalance(addressB);
     	console.log(postB);
-    	//assert((web3.fromWei(postB) - web3.fromWei(prevB)) == val, "did not withdraw");
+    	assert(postB.minus(prevB) == val, "did not withdraw");
     })
 
     it("should transfer through other contract", async() => {
@@ -43,7 +45,7 @@ contract('Transfers', function(accounts) {
     	let postB = web3.eth.getBalance(addressB);
     	console.log(postB);
 
-    	//assert((web3.fromWei(prevB,'wei') - web3.fromWei(postB,'wei')) == val, "did not transfer");
+    	assert(postB.minus(prevB) == val, "did not transfer");
     })
 
      it("should transfer multi through other contract", async() => {
@@ -59,7 +61,8 @@ contract('Transfers', function(accounts) {
     	console.log(postB);
     	console.log(prevC);
     	console.log(postC);
-    	//assert((web3.fromWei(prevB,'wei') - web3.fromWei(postB,'wei')) == val, "did not transfer");
+    	assert(postB.minus(prevB) == val/2, "did not transfer");
+    	assert(postC.minus(prevC) == val/2, "did not transfer");
     })   
 
 })
