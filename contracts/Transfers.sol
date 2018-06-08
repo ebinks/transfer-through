@@ -18,6 +18,12 @@ contract Transfers {
 		t_addr.call.value(_value)(sig, _addr);		
 	}
 
+	function transferMulti(address _addr1, address _addr2, uint _value) public {
+		require(balances[msg.sender] >= _value);
+		bytes4 sig = bytes4(keccak256("transferMulti(address,address)"));
+		t_addr.call.value(_value)(sig, _addr1, _addr2);		
+	}
+
 	function myBalance() public returns (uint) {
 		return balances[msg.sender];
 	}

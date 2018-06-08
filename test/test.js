@@ -4,6 +4,9 @@ var Transfers2 = artifacts.require("Transfers2");
 contract('Transfers', function(accounts) {
     var addressA = web3.eth.accounts[0];
     var addressB = web3.eth.accounts[1];
+    var addressC = web3.eth.accounts[2];
+    var addressD = web3.eth.accounts[3];
+
     var transfers;
     web3.eth.defaultAccount = web3.eth.accounts[0];
 
@@ -16,6 +19,7 @@ contract('Transfers', function(accounts) {
 
     it("should deposit", async() => {
     	let hash = await transfers.deposit({from: addressA, value: 100});
+    	console.log(hash.tx);
     	let bal = await transfers.balances.call(addressA, {from: addressA});
     	console.log(bal);
     })
@@ -41,4 +45,21 @@ contract('Transfers', function(accounts) {
 
     	//assert((web3.fromWei(prevB,'wei') - web3.fromWei(postB,'wei')) == val, "did not transfer");
     })
+
+     it("should transfer multi through other contract", async() => {
+    	let val = 10;
+    	let prevB = web3.eth.getBalance(addressB);
+    	let prevC = web3.eth.getBalance(addressC);
+
+    	let hash = await transfers.transferTwo(addressB,addressC, val, {from: addressA});
+    	let postB = web3.eth.getBalance(addressB);
+    	let postC = web3.eth.getBalance(addressC);
+
+    	console.log(prevB);
+    	console.log(postB);
+    	console.log(prevC);
+    	console.log(postC);
+    	//assert((web3.fromWei(prevB,'wei') - web3.fromWei(postB,'wei')) == val, "did not transfer");
+    })   
+
 })
