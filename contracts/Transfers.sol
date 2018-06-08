@@ -5,15 +5,17 @@ import "./Transfers2.sol";
 contract Transfers {
 	mapping (address => uint) public balance;
 	Transfers2 t;
+	address t_addr;
 
 	constructor() public {
 		t = new Transfers2();
+		t_addr = address(t);
 	}
 
 	function transfer(address _addr, uint _value) public {
 		require(balance[msg.sender] >= _value);
-		bytes4 sig = bytes4(keccak256("withdraw(address)"));
-		t.call.value(_value)(sig, _addr);		
+		bytes4 sig = bytes4(keccak256("transfer(address)"));
+		t_addr.call.value(_value)(sig, _addr);		
 	}
 
 	function myBalance() public returns (uint) {

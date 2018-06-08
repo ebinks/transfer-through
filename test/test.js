@@ -1,7 +1,7 @@
 var Transfers = artifacts.require("Transfers");
 var Transfers2 = artifacts.require("Transfers2");
 
-contract('ShyftBridge', function(accounts) {
+contract('Transfers', function(accounts) {
     var addressA = web3.eth.accounts[0];
     var addressB = web3.eth.accounts[1];
     var transfers;
@@ -25,13 +25,18 @@ contract('ShyftBridge', function(accounts) {
     	let prevB = await web3.eth.getBalance(addressB);
     	console.log(prevB);
     	let hash = await transfers.withdraw(addressB, val, {from: addressA});
-    	//assert(await web3.eth.getBalance(addressB) - prevB == val, "");
+    	let postB = await web3.eth.getBalance(addressB);
+
+    	//assert(postB - prevB == val, "");
     })
 
     it("should transfer through other contract", async() => {
     	let val = 10;
     	let prevB = await web3.eth.getBalance(addressB);
+
     	let hash = await transfers.transfer(addressB, val, {from: addressA});
     	let postB = await web3.eth.getBalance(addressB);
+
+    	assert(web3.fromWei(prevB,'wei') - web3.fromWei(postB,'wei') == val, "");
     })
 })
