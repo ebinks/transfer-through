@@ -42,6 +42,9 @@ contract('Transfers', function(accounts) {
     	console.log(prevB);
 
     	let hash = await transfers.transfer(addressB, val, {from: addressA});
+	//console.log(hash)
+	let block = await web3.eth.getBlock(hash.receipt.blockHash)
+	console.log(block)
     	let postB = web3.eth.getBalance(addressB);
     	console.log(postB);
 
